@@ -18,5 +18,9 @@
     "email"
   ],
   "author": "Saurabh Raje",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "jsonschema": "^1.2.6"
+  }
 }
