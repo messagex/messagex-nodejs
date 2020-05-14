@@ -45,9 +45,8 @@ const attachmentSchema = {
         contentEncoded: { type: 'string' },
         mimeType: { type: 'string' },
         filename: { type: 'string' },
-        attachmentType: { type: 'string' },
     },
-    required: ['contentEncoded', 'mimeType', 'filename', 'attachmentType'],
+    required: ['contentEncoded', 'mimeType', 'filename'],
 }
 
 const mailSchema = {
@@ -117,14 +116,14 @@ function authenticate(apiKey, apiSecret, callback) {
         apiSecret: apiSecret
     })
     .then(function (response) {
-        callback('', { statusCode: response.status, status: response.status + ' ' + response.statusText, bearerToken: response.data.bearerToken, expires: response.data.expiresAt });
+        callback('', { statusCode: response.status, status: response.status + ' ' + response.statusText, bearerToken: response.data.data.bearerToken, expires: response.data.data.expiresAt });
     })
     .catch(function (error) {
         callback(error);
     });
     
     // return the promise if no callback specified
-    return prommise;
+    return promise;
 }
 
 function sendMail(bearerToken, mailOptions, callback) {
