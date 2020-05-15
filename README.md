@@ -1,0 +1,1 @@
+![Build](https://github.com/messagex/messagex-nodejs/workflows/Build/badge.svg?branch=master)
