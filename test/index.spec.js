@@ -37,6 +37,10 @@ const apiAuthenticateFailureResponse = {
     }
 };
 
+const apiMailSendEmptyRequestBodyResponse = {
+    error: 'Mandatory fields missing',
+};
+
 describe('MessageX Send Mail', function() {
     nock(apiBaseUrl)
         .post('/api/authorise', apiAuthSuccessRequest)
@@ -73,6 +77,11 @@ describe('MessageX Send Mail', function() {
     });
 
     describe('Send Mail', function() {
-
+        nock(apiBaseUrl)
+            .post('/api/mail/send')
+            .reply(500, apiMailSendEmptyRequestBodyResponse);
+        it('should fail if the request body is empty', function() {
+            
+        });
     });
 });
