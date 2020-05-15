@@ -176,7 +176,7 @@ function sendMail(bearerToken, mailOptions, callback) {
         callback(Error('Emails must have a body'));
     } else {
         mailOptions.content.forEach(function(content, index) {
-            if (!v.validate(content, contentSchema)){
+            if (!v.validate(content, contentSchema).valid){
                 callback(Error('Email Body is invalid'));
             }
         });

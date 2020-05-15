@@ -238,23 +238,23 @@ const apiMailSendFailContentValidationRequest = {
         },
     ],
     subject: 'Test Email Subject',
-    content: [],
+    content: [
+        {
+            name: 'Wrong Key',
+        },
+    ],
     replyTo: {
         address: 'replyto@messagex.com'
     },
 };
 
 describe('MessageX Send Mail', function() {
-    nock(apiBaseUrl)
-        .post('/api/authorise', apiAuthSuccessRequest)
-        .reply(200, apiAuthenticateSuccessResponse);
-
-    nock(apiBaseUrl)
-        .post('/api/authorise', apiAuthFailureRequest)
-        .reply(401, apiAuthenticateFailureResponse);
 
     describe('Authenticate', function() {
         it('should authenticate successfully with the correct auth credentials', function(){
+            nock(apiBaseUrl)
+                .post('/api/authorise', apiAuthSuccessRequest)
+                .reply(200, apiAuthenticateSuccessResponse);
             const apiKey = 'V8yjr16wySux4143ipmfbo4saEK5Qw5odX1TMOoSG6SVWge8Zg10OIkUAWJQJlew';
             const apiSecret = 'vmENsH10SO5QXHDBwoweGw2tczPOn87vir2rbZDskfSyy1yyvcqY33T6PWAZqvVY'
             messagex.authenticate(apiKey, apiSecret, function (err, response) {
@@ -264,7 +264,26 @@ describe('MessageX Send Mail', function() {
             });
         });
 
+        it('should authenticate successfully with the correct auth credentials with promise', function(){
+            nock(apiBaseUrl)
+                .post('/api/authorise', apiAuthSuccessRequest)
+                .reply(200, apiAuthenticateSuccessResponse);
+            const apiKey = 'V8yjr16wySux4143ipmfbo4saEK5Qw5odX1TMOoSG6SVWge8Zg10OIkUAWJQJlew';
+            const apiSecret = 'vmENsH10SO5QXHDBwoweGw2tczPOn87vir2rbZDskfSyy1yyvcqY33T6PWAZqvVY'
+            messagex.authenticate(apiKey, apiSecret)
+            .then(function(response){
+                assert.equal(response.statusCode, 200);
+                assert.equal(response.bearerToken, apiAuthenticateSuccessResponse.data.bearerToken);
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
+        });
+
         it('should not authenticate successfully with the incorrect auth credentials', function(){
+            nock(apiBaseUrl)
+                .post('/api/authorise', apiAuthFailureRequest)
+                .reply(401, apiAuthenticateFailureResponse);
             const apiKey = 'V8yjr16wySux4143ipmfbo4saEK5Qw5odX1TMOoSG6SVWge8Zg10OIkUAWJQJlew';
             const apiSecret = 'vmENsH10SO5QXHDBwoweGw2tczPOn87vir2rbZDskfSyy1yyvcqY33T6PWAZqqVY'
             messagex.authenticate(apiKey, apiSecret, function (err, response) {
@@ -272,7 +291,25 @@ describe('MessageX Send Mail', function() {
             });
         });
 
+        it('should not authenticate successfully with the incorrect auth credentials with promise', function(){
+            nock(apiBaseUrl)
+                .post('/api/authorise', apiAuthFailureRequest)
+                .reply(401, apiAuthenticateFailureResponse);
+            const apiKey = 'V8yjr16wySux4143ipmfbo4saEK5Qw5odX1TMOoSG6SVWge8Zg10OIkUAWJQJlew';
+            const apiSecret = 'vmENsH10SO5QXHDBwoweGw2tczPOn87vir2rbZDskfSyy1yyvcqY33T6PWAZqqVY'
+            messagex.authenticate(apiKey, apiSecret)
+            .then(function(response){
+                assert.notEqual(response.statusCode, 200);
+            })
+            .catch(function(err) {
+                assert.notEqual(err, '');
+            });
+        });
+
         it ('should fail if no apiKey or apiSecret are specified', function() {
+            nock(apiBaseUrl)
+                .post('/api/authorise', apiAuthFailureRequest)
+                .reply(401, apiAuthenticateFailureResponse);
             messagex.authenticate('', '', function(err, response) {
                 assert.notEqual(err, '');
             })
@@ -280,6 +317,39 @@ describe('MessageX Send Mail', function() {
     });
 
     describe('Send Mail', function() {
+
+        it('should fail if no mail options are specified', function() {
+            nock(apiBaseUrl, {
+                reqheaders: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
+                },
+            })
+                .post('/api/mail/send')
+                .reply(500, apiMailSendEmptyRequestBodyResponse);
+            
+            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, '', function(err, response) {
+                assert.notEqual(err, '');
+            });
+        });
+
+        it('should fail if no mail options are specified with promise', function() {
+            nock(apiBaseUrl, {
+                reqheaders: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
+                },
+            })
+                .post('/api/mail/send')
+                .reply(500, apiMailSendEmptyRequestBodyResponse);
+            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, '')
+            .then(function(response) {
+                assert.notEqual(response.statusCode, 200)
+            })
+            .catch(function(err) {
+                assert.notEqual(err, '');
+            });
+        });
         
         it('should fail if the request body is empty', function() {
             nock(apiBaseUrl, {
@@ -294,22 +364,6 @@ describe('MessageX Send Mail', function() {
             messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, {}, function(err, response) {
                 assert.notEqual(err, '');
             });
-        });
-
-        it('should successfully send an email', function() {
-            nock(apiBaseUrl, {
-                reqHeaders: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
-                },
-            })
-            .post('/api/mail/send', apiMailSendSuccessRequest)
-            .reply(200, {
-                success: true,
-            });
-            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, apiMailSendSuccessRequest, function(err, response){
-                assert.equal(err, '');
-            })
         });
 
         it('should fail contact validation', function() {
@@ -375,5 +429,43 @@ describe('MessageX Send Mail', function() {
                 assert.notEqual(err, '');
             });
         });
+        
+        it('should successfully send an email', function() {
+            nock(apiBaseUrl, {
+                reqHeaders: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
+                },
+            })
+            .post('/api/mail/send', apiMailSendSuccessRequest)
+            .reply(200, {
+                success: true,
+            });
+            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, apiMailSendSuccessRequest, function(err, response){
+                assert.equal(err, '');
+            })
+        });
+
+        it('should successfully send an email with promise', function() {
+            nock(apiBaseUrl, {
+                reqHeaders: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
+                },
+            })
+            .post('/api/mail/send', apiMailSendSuccessRequest)
+            .reply(200, {
+                success: true,
+            });
+            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, apiMailSendSuccessRequest)
+            .then(function(response) {
+                assert.equal(response.statusCode, 200);
+            })
+            .catch(function(err){
+                console.log(err);
+            });
+        });
+
+        
     });
 });
