@@ -33,9 +33,9 @@ const contentSchema = {
     type: 'object',
     properties: {
         type: { type: 'string' },
-        content: { type: 'string' },
+        body: { type: 'string' },
     },
-    required: ['type', 'content'],
+    required: ['type', 'body'],
 }
 
 const attachmentSchema = {
@@ -94,7 +94,11 @@ const mailSchema = {
         }
     }
 }
-
+v.addSchema(headerSchema, '/header');
+v.addSchema(contactSchema, '/contact');
+v.addSchema(contentSchema, '/content');
+v.addSchema(attachmentSchema, '/attachment');
+v.addSchema(mailSchema, '/attachment');
 function authenticate(apiKey, apiSecret, callback) {
     // Setup Promise if no callback specified.
     var promise;
@@ -148,23 +152,34 @@ function sendMail(bearerToken, mailOptions, callback) {
     }
     // check if atleast one to address is specified
     var contactArraySchema = {
+        id: '/contactarray',
         type: 'array',
         items: { '$ref': '/contact' }
-    }
+    };
+    v.addSchema(contactArraySchema, '/contactarray');
     if (!mailOptions.to || !v.validate(mailOptions.to, contactArraySchema).valid) {
         callback(Error('One or more to addresses are invalid'))
+    }
+    // Check if cc and bcc are specified. If specified, validate their schemas
+    if (mailOptions.cc && !v.validate(mailOptions.cc, contactArraySchema).valid) {
+        callback(Error('One or more cc addresses are invalid'))
+    }
+    if (mailOptions.bcc && !v.validate(mailOptions.bcc, contactArraySchema).valid) {
+        callback(Error('One or more bcc addresses are invalid'))
     }
     // check if subject is specified
     if (!mailOptions.subject || !v.validate(mailOptions.subject, { type: 'string' }).valid) {
         callback(Error('Subject is either undefined or invalid'))
     }
     // check if message has content
-    var contentArraySchema = {
-        type: 'array',
-        items: { '$ref': '/content' }
-    }
-    if (!mailOptions.contentArraySchema || !v.validate(mailOptions.content, contentArraySchema).valid) {
-        callback(Error('One or more to addresses are invalid'))
+    if (!mailOptions.content) {
+        callback(Error('Emails must have a body'));
+    } else {
+        mailOptions.content.forEach(function(content, index) {
+            if (!v.validate(content, contentSchema)){
+                callback(Error('Email Body is invalid'));
+            }
+        });
     }
     // Compulsory fields have been validated
     // Send email
@@ -182,7 +197,7 @@ function sendMail(bearerToken, mailOptions, callback) {
         callback(error);
     });
     // return the promise if no callback specified
-    return prommise;
+    return promise;
 }
 
 module.exports = {

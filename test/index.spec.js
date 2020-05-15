@@ -41,6 +41,209 @@ const apiMailSendEmptyRequestBodyResponse = {
     error: 'Mandatory fields missing',
 };
 
+const apiMailSendSuccessRequest = {
+    from: {
+        address: 'sender@messagex.com',
+        name: 'Sender',
+    },
+    to: [
+        {
+            address: 'recipeint1@messagex.com',
+            name: 'Recipient 1',
+        },
+        {
+            address: 'recipeint2@messagex.com',
+            name: 'Recipient 2',
+        },
+    ],
+    cc: [
+        {
+            address: 'cc1@messagex.com',
+            name: 'CC 1',
+        },
+        {
+            address: 'cc2@messagex.com',
+            name: 'CC 2',
+        },
+    ],
+    subject: 'Test Email Subject',
+    content: [
+        {
+            type: 'text/plain',
+            body: 'Test email body',
+        },
+        {
+            type: 'text/html',
+            body: '<html><head><title>Test HTML email body</title></head><body><p>Test HTML Email body</p></body></html>',
+        },
+    ],
+    replyTo: {
+        address: 'replyto@messagex.com'
+    },
+};
+
+const apiMailSendFailContactValidationRequest = {
+    from: {
+        address: 'sender@messagex.com',
+        name: 'Sender',
+    },
+    to: [
+        {
+            name: 'Recipient 1',
+        },
+        {
+            address: 'recipeint2@messagex.com',
+            name: 'Recipient 2',
+        },
+    ],
+    cc: [
+        {
+            address: 'cc1@messagex.com',
+            name: 'CC 1',
+        },
+        {
+            address: 'cc2@messagex.com',
+            name: 'CC 2',
+        },
+    ],
+    subject: 'Test Email Subject',
+    content: [
+        {
+            type: 'text/plain',
+            body: 'Test email body',
+        },
+        {
+            type: 'text/html',
+            body: '<html><head><title>Test HTML email body</title></head><body><p>Test HTML Email body</p></body></html>',
+        },
+    ],
+    replyTo: {
+        address: 'replyto@messagex.com'
+    },
+};
+
+const apiMailSendFailCCContactValidationRequest = {
+    from: {
+        address: 'sender@messagex.com',
+        name: 'Sender',
+    },
+    to: [
+        {
+            address: 'recipeint1@messagex.com',
+            name: 'Recipient 1',
+        },
+        {
+            address: 'recipeint2@messagex.com',
+            name: 'Recipient 2',
+        },
+    ],
+    cc: [
+        {
+            name: 'CC 1',
+        },
+        {
+            address: 'cc2@messagex.com',
+            name: 'CC 2',
+        },
+    ],
+    subject: 'Test Email Subject',
+    content: [
+        {
+            type: 'text/plain',
+            body: 'Test email body',
+        },
+        {
+            type: 'text/html',
+            body: '<html><head><title>Test HTML email body</title></head><body><p>Test HTML Email body</p></body></html>',
+        },
+    ],
+    replyTo: {
+        address: 'replyto@messagex.com'
+    },
+};
+
+const apiMailSendFailBCCContactValidationRequest = {
+    from: {
+        address: 'sender@messagex.com',
+        name: 'Sender',
+    },
+    to: [
+        {
+            address: 'recipeint1@messagex.com',
+            name: 'Recipient 1',
+        },
+        {
+            address: 'recipeint2@messagex.com',
+            name: 'Recipient 2',
+        },
+    ],
+    cc: [
+        {
+            address: 'cc1@messagex.com',
+            name: 'CC 1',
+        },
+        {
+            address: 'cc2@messagex.com',
+            name: 'CC 2',
+        },
+    ],
+    bcc: [
+        {
+            name: 'BCC 1',
+        },
+        {
+            address: 'bcc2@messagex.com',
+            name: 'BCC 2',
+        },
+    ],
+    subject: 'Test Email Subject',
+    content: [
+        {
+            type: 'text/plain',
+            body: 'Test email body',
+        },
+        {
+            type: 'text/html',
+            body: '<html><head><title>Test HTML email body</title></head><body><p>Test HTML Email body</p></body></html>',
+        },
+    ],
+    replyTo: {
+        address: 'replyto@messagex.com'
+    },
+};
+
+const apiMailSendFailContentValidationRequest = {
+    from: {
+        address: 'sender@messagex.com',
+        name: 'Sender',
+    },
+    to: [
+        {
+            address: 'recipeint1@messagex.com',
+            name: 'Recipient 1',
+        },
+        {
+            address: 'recipeint2@messagex.com',
+            name: 'Recipient 2',
+        },
+    ],
+    cc: [
+        {
+            address: 'cc1@messagex.com',
+            name: 'CC 1',
+        },
+        {
+            address: 'cc2@messagex.com',
+            name: 'CC 2',
+        },
+    ],
+    subject: 'Test Email Subject',
+    content: [],
+    replyTo: {
+        address: 'replyto@messagex.com'
+    },
+};
+
 describe('MessageX Send Mail', function() {
     nock(apiBaseUrl)
         .post('/api/authorise', apiAuthSuccessRequest)
@@ -65,23 +268,112 @@ describe('MessageX Send Mail', function() {
             const apiKey = 'V8yjr16wySux4143ipmfbo4saEK5Qw5odX1TMOoSG6SVWge8Zg10OIkUAWJQJlew';
             const apiSecret = 'vmENsH10SO5QXHDBwoweGw2tczPOn87vir2rbZDskfSyy1yyvcqY33T6PWAZqqVY'
             messagex.authenticate(apiKey, apiSecret, function (err, response) {
-                assert.notEqual(err, null);
+                assert.notEqual(err, '');
             });
         });
 
         it ('should fail if no apiKey or apiSecret are specified', function() {
             messagex.authenticate('', '', function(err, response) {
-                assert.notEqual(err, null);
+                assert.notEqual(err, '');
             })
         });
     });
 
     describe('Send Mail', function() {
-        nock(apiBaseUrl)
-            .post('/api/mail/send')
-            .reply(500, apiMailSendEmptyRequestBodyResponse);
+        
         it('should fail if the request body is empty', function() {
+            nock(apiBaseUrl, {
+                reqheaders: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
+                },
+            })
+                .post('/api/mail/send')
+                .reply(500, apiMailSendEmptyRequestBodyResponse);
             
+            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, {}, function(err, response) {
+                assert.notEqual(err, '');
+            });
+        });
+
+        it('should successfully send an email', function() {
+            nock(apiBaseUrl, {
+                reqHeaders: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
+                },
+            })
+            .post('/api/mail/send', apiMailSendSuccessRequest)
+            .reply(200, {
+                success: true,
+            });
+            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, apiMailSendSuccessRequest, function(err, response){
+                assert.equal(err, '');
+            })
+        });
+
+        it('should fail contact validation', function() {
+            nock(apiBaseUrl, {
+                reqHeaders: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
+                },
+            })
+            .post('/api/mail/send', apiMailSendFailContactValidationRequest)
+            .reply(200, {
+                success: true,
+            });
+            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, apiMailSendFailContactValidationRequest, function(err, response) {
+                assert.notEqual(err, '');
+            });
+        });
+
+        it('should fail cc contact validation', function() {
+            nock(apiBaseUrl, {
+                reqHeaders: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
+                },
+            })
+            .post('/api/mail/send', apiMailSendFailCCContactValidationRequest)
+            .reply(200, {
+                success: true,
+            });
+            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, apiMailSendFailCCContactValidationRequest, function(err, response) {
+                assert.notEqual(err, '');
+            });
+        });
+
+        it('should fail bcc contact validation', function() {
+            nock(apiBaseUrl, {
+                reqHeaders: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
+                },
+            })
+            .post('/api/mail/send', apiMailSendFailBCCContactValidationRequest)
+            .reply(200, {
+                success: true,
+            });
+            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, apiMailSendFailBCCContactValidationRequest, function(err, response) {
+                assert.notEqual(err, '');
+            });
+        });
+
+        it('should fail content validation', function() {
+            nock(apiBaseUrl, {
+                reqHeaders: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + apiAuthenticateSuccessResponse.data.bearerToken,
+                },
+            })
+            .post('/api/mail/send', apiMailSendFailContentValidationRequest)
+            .reply(200, {
+                success: true,
+            });
+            messagex.sendMail(apiAuthenticateSuccessResponse.data.bearerToken, apiMailSendFailContentValidationRequest, function(err, response) {
+                assert.notEqual(err, '');
+            });
         });
     });
 });
