@@ -1,6 +1,6 @@
 {
   "name": "messagex",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "This package enables applications to utilise all public APIs of the MessageX communications platform.",
   "main": "index.js",
   "homepage": "https://github.com/messagex/node-messagex#readme",
