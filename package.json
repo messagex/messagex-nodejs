@@ -6,7 +6,8 @@
   "homepage": "https://github.com/messagex/node-messagex#readme",
   "bugs": "https://github.com/messagex/node-messagex/issues",
   "scripts": {
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "coverage": "nyc report --reporter=text-lcov > ccoverage.lcov"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "assert": "^2.0.0",
+    "codecov": "^3.7.0",
     "mocha": "^7.1.2",
     "nock": "^12.0.3",
     "nyc": "^15.0.1"
