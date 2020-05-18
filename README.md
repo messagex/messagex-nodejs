@@ -6,6 +6,8 @@
 ![Build](https://github.com/messagex/messagex-nodejs/workflows/Build/badge.svg?branch=master)
 [![Sourcegraph](https://sourcegraph.com/github.com/messagex/node-messagex/-/badge.svg)](https://sourcegraph.com/github.com/messagex/node-messagex?badge)
 
+![Coverage](https://img.shields.io/badge/coverage-100%-green)
+
 ![MessageX Logo](https://raw.githubusercontent.com/messagex/node-messagex/master/img/messagex-logo.png "MessageX")
 
 This SDK provides enables node applications with an easy to use interface to the MessageX API.
