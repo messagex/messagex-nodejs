@@ -20,10 +20,12 @@
     "email"
   ],
   "author": {
-   "name": "Saurabh Raje",
-   "email": "saurabhraje1124@gmail.com"
+    "name": "Saurabh Raje",
+    "email": "saurabhraje1124@gmail.com"
   },
-  "engines": { "node": ">=8.14 <=14" },
+  "engines": {
+    "node": ">=8.14 <=14"
+  },
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.2",
