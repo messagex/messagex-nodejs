@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:messagex/node-messagex.git"
+    "url": "https://github.com/messagex/node-messagex.git"
   },
   "keywords": [
     "messagex",
