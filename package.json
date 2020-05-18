@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This package enables applications to utilise all public APIs of the MessageX communications platform.",
   "main": "index.js",
-  "homepage": "https://github.com/messagex/node-messagex",
+  "homepage": "https://github.com/messagex/node-messagex#readme",
   "bugs": "https://github.com/messagex/node-messagex/issues",
   "scripts": {
     "test": "nyc mocha"
