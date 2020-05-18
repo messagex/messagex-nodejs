@@ -20,7 +20,7 @@ This SDK provides enables node applications with an easy to use interface to the
 ## Installation
 
 ```sh
-npm install --save node-messagex
+npm install --save messagex
 ```
 
 ---
@@ -32,7 +32,7 @@ npm install --save node-messagex
 Importing the module
 
 ```javascript
-var messagex = require('node-messagex')
+var messagex = require('messagex')
 ```
 
 The following example shows how to send an email with the bare minimum required options.
