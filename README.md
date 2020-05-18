@@ -5,7 +5,7 @@
 ---
 ![Build](https://github.com/messagex/messagex-nodejs/workflows/Build/badge.svg?branch=master)
 [![Sourcegraph](https://sourcegraph.com/github.com/messagex/node-messagex/-/badge.svg)](https://sourcegraph.com/github.com/messagex/node-messagex?badge)
-![Coverage](https://img.shields.io/badge/coverage-100%25-green)
+![Coverage](https://img.shields.io/codecov/c/gh/messagex/node-messagex)
 ![Node](https://img.shields.io/node/v/messagex)
 ![npm](https://img.shields.io/npm/v/messagex)
 
