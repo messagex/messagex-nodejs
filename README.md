@@ -1,5 +1,7 @@
 # MessageX SDK - Node
 
+# THIS SDK IS A WIP AND SHOULD NOT BE DOWNLOADED YET
+
 ---
 ![Build](https://github.com/messagex/messagex-nodejs/workflows/Build/badge.svg?branch=master)
 [![Sourcegraph](https://sourcegraph.com/github.com/messagex/node-messagex/-/badge.svg)](https://sourcegraph.com/github.com/messagex/node-messagex?badge)
